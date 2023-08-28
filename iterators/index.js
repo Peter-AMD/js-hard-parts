@@ -5,9 +5,11 @@ console.log('Hello, world!');
 
 function sumFunc(arr) {
   // YOUR CODE HERE
+  // We can use reduce here for a more readable code, but the instructions says "for loop", so we'll use for loop
   let sum = 0;
+
   for(const item of arr) {
-    sum+=item;
+    sum += item;
   }
   return sum;
 }
@@ -22,8 +24,8 @@ function returnIterator(arr) {
   
   return () => {
     const currCounter = counter;
-    counter+=1;
-    return arr[currCounter];
+    counter += 1;
+    return arr[currCounter]
   }
 }
 
@@ -42,12 +44,13 @@ console.log(myIterator()); // -> should log 'd'
 function nextIterator(arr) {
   // YOUR CODE HERE
   let counter = 0;
+  
   return {
     next: () => {
       const currCounter = counter;
-      counter+=1;
-      return arr[currCounter];
-    }
+      counter += 1;
+      return arr[currCounter]
+  	}
   }
 }
 
@@ -65,10 +68,11 @@ console.log(iteratorWithNext.next()); // -> should log 3
 function sumArray(arr) {
   // YOUR CODE HERE
   // use your nextIterator function
+  const iterator = nextIterator(arr);
   let sum = 0;
-  const iterate = nextIterator(arr);
-  for(const value of arr) {
-    sum+=iterate.next()
+  
+  for(const _item of arr) {
+    sum += iterator.next();
   }
   return sum;
 }
@@ -83,7 +87,8 @@ console.log(sumArray(array4)); // -> should log 10
 
 function setIterator(set) {
   // YOUR CODE HERE
-  const iterator = set[Symbol.iterator]();
+  const iterator = set.values();
+  
   return {
     next: () => {
       return iterator.next().value
@@ -108,8 +113,8 @@ function indexIterator(arr) {
   return {
     next: () => {
       const currCounter = counter;
-      counter+=1;
-      return [currCounter, arr[currCounter]];
+      counter += 1;
+      return [currCounter, arr[currCounter]]
     }
   }
 }
@@ -127,25 +132,22 @@ console.log(iteratorWithIndex.next()); // -> should log [2, 'c']
 
 function Words(string) {
   this.str = string;
-  
-  return this.str.split(' ');
 }
 
 Words.prototype[Symbol.iterator] = function() {
-  // console.log('this', this)
+  // YOUR CODE HERE
+  
+  const splitStringArray = this.str.split(' ');
+  let counter = 0;
   return {
     next: () => {
-      return this;
+      const currCounter = counter;
+      counter += 1;
+      
+      const value = splitStringArray[currCounter];
+      return value ? {value, done: false} : { done: true };
     }
   }
-  // return {
-  //   next: () => {
-  //     const currCounter = counter;
-  //     counter+=1;
-  //     return arrayedStr[currCounter]
-  //   }
-  // }
-  
 }
 
 // Uncomment the lines below to test your work
@@ -160,13 +162,13 @@ function valueAndPrevIndex(array){
   return {
     sentence: () => {
       const currCounter = counter;
-      counter+=1;
-      if(currCounter === 0) {
-        return "It is the first";
-      }
+      counter += 1;
       
-      return `was found after index ${counter - 1}`
-  	}
+      if(!currCounter) {
+        return 'it is the first '
+      }
+      return `${array[currCounter]} was found after index ${currCounter-1}`
+    }
   }
 }
 
@@ -180,14 +182,8 @@ console.log(returnedSentence.sentence());
 
 function* createConversation(string) {
   yield setInterval(() => {
-    if(string === "english") {
-      console.log("hello there")
-    }
-    else {
-      console.log("gibberish")
-    }
+    console.log(string === 'english' ? 'hello there' : 'gibberish')
   }, 3000)
-
 }
 
 console.log(createConversation('english').next());
@@ -196,15 +192,15 @@ console.log(createConversation('english').next());
 
 //CHALLENGE 9
 function waitForVerb(noun) {
-  const verb = "play";
+  const verb = 'barks';
   return new Promise((resolve, reject) => {
-    setTimeout(() => resolve(noun + " " + verb), 3000);
+    resolve(`${noun} ${verb}`);
   })
 }
 
 async function f(noun) {
-  const data = await waitForVerb(noun);
-  console.log(data);
+  const sentence = await waitForVerb(noun);
+  console.log(sentence)
 }
 
 f("dog");
